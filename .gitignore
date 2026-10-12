@@ -8,3 +8,11 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Assignment artifacts (regenerate with uv run python train_model.py)
+outputs/
+*.pkl
+*.parquet
+
+# Tooling caches
+.cache/
