@@ -1,6 +1,6 @@
-# Phishing Website URL Detection Using Machine Learning
+# PhishCheck
 
-* [ ] 
+*Phishing Website URL Detection Using Machine Learning*
 
 The core idea: a URL can be inspected offline, without fetching the page, without WHOIS/DNS lookups, and without sending data anywhere. Every feature used by the model is recomputed from the raw URL text with pure Python, and every one of them has been **verified against the official dataset values (≥99% exact match)** before being accepted into the model.
 
@@ -98,6 +98,15 @@ Confusion matrix (rows = actual, columns = predicted):
 
 Model: `RandomForestClassifier` with sklearn defaults and `random_state=42` — no hyperparameter tuning or cross-validation, by assignment design.
 
+### Reading these numbers
+
+- **3,376 of 3,772** test URLs classified correctly (89.5%).
+- **Recall 90.5%** — about 9 of every 10 phishing URLs are caught.
+- **Precision 88.7%** — when the model says "phishing", it is right about 9 times in 10.
+- The two error types differ in cost: **217 false alarms** (a safe site flagged as phishing — the cautious direction) versus **179 misses** (a phishing site passed as safe — the costly direction).
+- Errors appear where syntax alone is ambiguous — e.g. short bare domains flagged as suspicious, or complex-but-legitimate paths raising risk signals.
+- Page-content and WHOIS/DNS features would resolve much of this ambiguity, but they are permanently out of scope by design: only features recomputable from a raw URL are allowed. These figures are the honest result of that scope, not a tuning shortfall.
+
 ## Limitations
 
 - Only URL-syntax features are used: page-content (hyperlinks, forms, iframe) and external-service (WHOIS, DNS, page rank, traffic) features cannot be computed from a raw URL and are permanently out of scope.
@@ -115,7 +124,7 @@ Model: `RandomForestClassifier` with sklearn defaults and `random_state=42` — 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/jsfl-24/ML.git
+git clone https://github.com/jsfl-24/phishcheck.git
 cd ML
 ```
 

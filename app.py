@@ -12,7 +12,7 @@ from ml.url_features import JSON_PATH, extract_features
 
 MODEL_PATH = "phishing_model.pkl"
 
-st.set_page_config(page_title="Phishing URL Detection", layout="centered")
+st.set_page_config(page_title="PhishCheck", layout="centered")
 
 
 @st.cache_resource
@@ -578,7 +578,7 @@ st.markdown(
     """
     <div class="app-footer">
         <span>Random Forest &middot; 37 URL-syntax features</span>
-        <a href="https://github.com/jsfl-24/ML" target="_blank" rel="noopener">github.com/jsfl-24/ML</a>
+        <a href="https://github.com/jsfl-24/phishcheck" target="_blank" rel="noopener">github.com/jsfl-24/phishcheck</a>
     </div>
     """,
     unsafe_allow_html=True,

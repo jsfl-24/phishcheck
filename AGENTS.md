@@ -3,7 +3,7 @@
 
 ## Project
 
-Phishing Website URL Detection — a Random Forest classifier that detects phishing URLs from URL-syntax features. Data comes from the Hugging Face dataset `pirocheto/phishing-url` (official train/test parquet splits). This is a small academic assignment: prioritize correctness, minimal code, and reproducibility over features.
+PhishCheck — phishing website URL detection, a Random Forest classifier that detects phishing URLs from URL-syntax features. Data comes from the Hugging Face dataset `pirocheto/phishing-url` (official train/test parquet splits). This is a small academic assignment: prioritize correctness, minimal code, and reproducibility over features.
 
 ## Hard rules
 
