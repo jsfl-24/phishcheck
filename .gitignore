@@ -9,10 +9,11 @@ wheels/
 # Virtual environments
 .venv
 
-# Assignment artifacts (regenerate with uv run python train_model.py)
-outputs/
-*.pkl
+# Dataset files (never committed; downloaded on demand)
 *.parquet
+
+# Model, plots and metrics.json are committed as assignment deliverables;
+# regenerate with: uv run python train_model.py
 
 # Tooling caches
 .cache/
