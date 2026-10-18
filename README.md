@@ -139,7 +139,7 @@ Prints a per-feature table (feature, best variant, exact-match rate on the 7,658
 uv run python train_model.py
 ```
 
-Trains a `RandomForestClassifier` (`random_state=42`) on the official train split, evaluates on the official test split, saves `phishing_model.pkl` and the plots (`outputs/class_distribution.png`, `outputs/confusion_matrix.png`, `outputs/feature_importance.png`), and prints the verification table plus the metrics shown in Results.
+Trains a `RandomForestClassifier` (`random_state=42`) on the official train split, evaluates on the official test split, saves `phishing_model.pkl` and the plots (`outputs/class_distribution.png`, `outputs/confusion_matrix.png`, `outputs/feature_importance.png`), writes the measured metrics to `outputs/metrics.json`, and prints the verification table plus the metrics shown in Results.
 
 ### 5. Launch the web app
 
@@ -163,7 +163,7 @@ app.py                      # Streamlit prediction UI
 src/ml/url_features.py      # feature extraction + verification harness (single source of truth)
 feature_columns.json        # generated canonical feature order
 phishing_model.pkl          # generated trained model
-outputs/                    # generated plots (class_distribution, confusion_matrix, feature_importance)
+outputs/                    # generated plots (class_distribution, confusion_matrix, feature_importance) + metrics.json
 requirements.txt            # generated via uv export
 AGENTS.md                   # development rules for this repository
 initianPLAN.md              # assignment plan / spec

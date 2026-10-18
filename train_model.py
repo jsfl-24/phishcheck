@@ -104,7 +104,18 @@ def main():
     save_class_distribution(y_train, y_test)
     save_confusion_matrix(cm, labels)
     save_feature_importance(clf, cols)
-    print(f"saved {MODEL_PATH.name} and 3 plots in {OUTPUTS.name}/")
+    metrics = {
+        "accuracy": round(float(acc), 4),
+        "precision": round(float(prec), 4),
+        "recall": round(float(rec), 4),
+        "f1": round(float(f1), 4),
+        "confusion_matrix": cm.tolist(),
+        "labels": labels,
+        "n_train": int(len(train)),
+        "n_test": int(len(test)),
+    }
+    (OUTPUTS / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    print(f"saved {MODEL_PATH.name}, 3 plots and metrics.json")
 
 
 if __name__ == "__main__":
