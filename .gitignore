@@ -17,3 +17,20 @@ wheels/
 
 # Tooling caches
 .cache/
+
+# Local-only assignment docs (not published)
+AGENTS.md
+initianPLAN.md
+
+# IDE / OS junk
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Secrets / env
+.env
+.streamlit/secrets.toml
+
+# Logs
+*.log
