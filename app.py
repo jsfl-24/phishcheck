@@ -384,42 +384,39 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if not st.session_state.get("human_ok"):
+@st.dialog("Are you a human?", width="small")
+def human_check():
     st.markdown(
-        """
-        <h1 class="hero">Are you a <span class="safe">human?</span></h1>
-        <p class="hero-sub">Upload a photo that contains a face to unlock PhishCheck.</p>
-        """,
+        '<p class="gate-note">Allow camera access and take one photo to unlock PhishCheck.</p>',
         unsafe_allow_html=True,
     )
-    _gate_upload = st.file_uploader(
-        "Photo with a face (jpg/png)", type=["jpg", "jpeg", "png"], key="gate_upload"
-    )
-    if _gate_upload is not None:
+    _shot = st.camera_input("Camera", key="gate_cam")
+    if _shot is not None:
         from ml.face_check import annotate, detect_faces, prepare
 
         try:
-            _gate_img = prepare(_gate_upload.getvalue())
+            _img = prepare(_shot.getvalue())
         except Exception:
-            st.warning("That file is not a readable image.")
+            st.warning("Unreadable frame — try again.")
         else:
-            _gate_boxes = detect_faces(_gate_img)
-            if _gate_boxes:
+            _boxes = detect_faces(_img)
+            if _boxes:
                 st.image(
-                    annotate(_gate_img, _gate_boxes),
-                    caption=f"{len(_gate_boxes)} face(s) detected — welcome",
+                    annotate(_img, _boxes),
+                    caption=f"{len(_boxes)} face(s) detected — welcome",
                 )
                 st.session_state["human_ok"] = True
                 st.rerun()
             else:
-                st.warning("No face detected — try another photo.")
+                st.warning("No face detected — look straight at the camera.")
     if st.button("Skip", key="gate_skip"):
         st.session_state["human_ok"] = True
         st.rerun()
-    st.markdown(
-        '<p class="gate-note">Skip lets you in without a photo — the check runs once per browser session.</p>',
-        unsafe_allow_html=True,
-    )
+
+
+if not st.session_state.get("human_ok"):
+    human_check()
+    st.button("Open human check", key="gate_reopen")
     st.stop()
 
 st.markdown(
