@@ -85,12 +85,15 @@ numpy==2.5.4
     # via
     #   contourpy
     #   matplotlib
+    #   opencv-python-headless
     #   pandas
     #   pydeck
     #   scikit-learn
     #   scipy
     #   seaborn
     #   streamlit
+opencv-python-headless==4.14.0.94
+    # via ml
 packaging==26.3
     # via
     #   altair

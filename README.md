@@ -33,7 +33,11 @@ uv sync
 uv run streamlit run app.py
 ```
 
-Then open http://localhost:8501, paste a URL, and get a verdict with confidence and the signals behind it. The trained model, feature schema, plots and metrics are committed, so the app runs right after `uv sync`.
+Then open http://localhost:8501, pass the face-based human check (upload a photo containing a face, or use **Skip**), paste a URL, and get a verdict with confidence and the signals behind it. The trained model, feature schema, plots and metrics are committed, so the app runs right after `uv sync`.
+
+## Human check
+
+The app opens with an "Are you a human?" gate: a photo containing a face unlocks it (boxes are drawn around every detected face), and a **Skip** button is provided. The check runs once per browser session; a **Reset human check** button re-triggers it. Face detection is fully offline, using OpenCV's Haar cascade.
 
 ## Retrain
 

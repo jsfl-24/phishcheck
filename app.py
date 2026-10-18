@@ -142,6 +142,10 @@ st.markdown(
         margin: 0 0 0.9rem 0; text-wrap: balance;
     }
     .hero-sub { font-size: 1.05rem; color: var(--sub); margin: 0; line-height: 1.5; }
+    .gate-note {
+        font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px;
+        color: var(--sub); margin: 0.75rem 0 0; line-height: 1.5;
+    }
     .safe {
         font-family: 'Tangerine', cursive; color: var(--green); font-weight: 700;
         font-size: 1.35em; letter-spacing: 0;
@@ -376,6 +380,50 @@ st.markdown(
         <span class="wordmark">PHISHCHECK</span>
         <span class="status"><span class="dot"></span>MODEL READY</span>
     </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+if not st.session_state.get("human_ok"):
+    st.markdown(
+        """
+        <h1 class="hero">Are you a <span class="safe">human?</span></h1>
+        <p class="hero-sub">Upload a photo that contains a face to unlock PhishCheck.</p>
+        """,
+        unsafe_allow_html=True,
+    )
+    _gate_upload = st.file_uploader(
+        "Photo with a face (jpg/png)", type=["jpg", "jpeg", "png"], key="gate_upload"
+    )
+    if _gate_upload is not None:
+        from ml.face_check import annotate, detect_faces, prepare
+
+        try:
+            _gate_img = prepare(_gate_upload.getvalue())
+        except Exception:
+            st.warning("That file is not a readable image.")
+        else:
+            _gate_boxes = detect_faces(_gate_img)
+            if _gate_boxes:
+                st.image(
+                    annotate(_gate_img, _gate_boxes),
+                    caption=f"{len(_gate_boxes)} face(s) detected — welcome",
+                )
+                st.session_state["human_ok"] = True
+                st.rerun()
+            else:
+                st.warning("No face detected — try another photo.")
+    if st.button("Skip", key="gate_skip"):
+        st.session_state["human_ok"] = True
+        st.rerun()
+    st.markdown(
+        '<p class="gate-note">Skip lets you in without a photo — the check runs once per browser session.</p>',
+        unsafe_allow_html=True,
+    )
+    st.stop()
+
+st.markdown(
+    """
     <h1 class="hero">Is this URL <span class="safe">safe?</span></h1>
     <p class="hero-sub">Paste any website URL and get an instant verdict.</p>
     """,
@@ -578,6 +626,12 @@ st.markdown(
     f"<ul>{_tips_items}</ul></section>",
     unsafe_allow_html=True,
 )
+
+if st.session_state.get("human_ok") and st.button(
+    "Reset human check", key="reset_human"
+):
+    st.session_state["human_ok"] = False
+    st.rerun()
 
 st.markdown(
     """
