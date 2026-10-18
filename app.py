@@ -10,7 +10,9 @@ import streamlit as st
 
 from ml.url_features import JSON_PATH, extract_features
 
-MODEL_PATH = "phishing_model.pkl"
+ROOT = Path(__file__).resolve().parent
+MODEL_PATH = ROOT / "phishing_model.pkl"
+OUTPUTS = ROOT / "outputs"
 
 st.set_page_config(page_title="PhishCheck", layout="centered")
 
@@ -23,19 +25,21 @@ def load_model():
 
 model = load_model()
 feature_cols = json.loads(JSON_PATH.read_text(encoding="utf-8"))
+assert model.n_features_in_ == len(feature_cols)
 
 
 @st.cache_data
 def chart_uris():
     return {
-        name: base64.b64encode((Path("outputs") / f"{name}.png").read_bytes()).decode()
+        name: base64.b64encode((OUTPUTS / f"{name}.png").read_bytes()).decode()
         for name in ("class_distribution", "confusion_matrix", "feature_importance")
+        if (OUTPUTS / f"{name}.png").exists()
     }
 
 
 @st.cache_data
 def metrics_data():
-    p = Path("outputs") / "metrics.json"
+    p = OUTPUTS / "metrics.json"
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
 
 
@@ -459,6 +463,7 @@ _figures = "".join(
     f'<img src="data:image/png;base64,{_charts[k]}" alt="{_CAPTIONS[k]} chart" loading="lazy">'
     f"<figcaption>{_CAPTIONS[k]}</figcaption></figure>"
     for k in _CAPTIONS
+    if k in _charts
 )
 if _result:
     _rail_why = "".join(f"<li>{w}</li>" for w in _result["why"])

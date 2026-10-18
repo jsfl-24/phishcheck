@@ -8,7 +8,6 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 JSON_PATH = ROOT / "feature_columns.json"
-DATA_URL = "hf://datasets/pirocheto/phishing-url/data/train.parquet"
 
 _S2_LABELS = {
     "com", "co", "org", "net", "gov", "go", "ac", "edu", "ed", "or", "web", "my",
@@ -309,6 +308,11 @@ def verify(df, write_json=True, threshold=0.99):
         print("first-variant != best-variant:")
         for name, best_v, first_v in first_mismatch:
             print(f"  {name}: first={first_v} best={best_v}")
+        raise SystemExit(
+            "aborting: extract_features uses variants[0] but a better variant exists for: "
+            + ", ".join(name for name, _, _ in first_mismatch)
+            + " - promote the best variant to variants[0]"
+        )
     if write_json:
         ordered = [c for c in df.columns if c in set(kept)]
         JSON_PATH.write_text(json.dumps(ordered, indent=2), encoding="utf-8")
