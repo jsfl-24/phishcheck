@@ -35,9 +35,28 @@ uv run streamlit run app.py
 
 Then open http://localhost:8501, pass the face-based human check (take a photo with your camera, or use **Skip**), paste a URL, and get a verdict with confidence and the signals behind it. The trained model, feature schema, plots and metrics are committed, so the app runs right after `uv sync`.
 
-## Human check
+## Face detection (human check)
 
-The app opens with an "Are you a human?" popup: allow camera access and take one photo — faces are detected fully offline with OpenCV's Haar cascade and boxed on the snapshot; any detected face unlocks the app, and **Skip** is provided as a fallback. The check runs once per browser session; a **Reset human check** button re-triggers it. The camera requires `localhost` or HTTPS — browsers block it on plain-IP hosts.
+PhishCheck opens with an **"Are you a human?" popup** — a small modal window, not a separate page. The rest of the app stays locked behind it until the check passes.
+
+**How it works**
+
+1. The browser shows a live camera preview in the popup (permission prompt appears once).
+2. Taking a photo sends that single frame to the server, where OpenCV's Haar cascade (`haarcascade_frontalface_default.xml`) searches it for faces.
+3. One or more faces found → every face is boxed on the snapshot and the app unlocks. No face found → a "No face detected" warning lets you retake the photo.
+
+**Controls**
+
+- **Skip** — enter without a photo (fallback if the camera is unavailable or blocked).
+- **Open human check** — reopens the popup if it was dismissed.
+- **Reset human check** (footer) — locks the app and asks again.
+- The check passes once per browser session; a new tab or browser start always asks again.
+
+**Good to know**
+
+- Detection is fully offline (`opencv-python-headless`, code in `src/ml/face_check.py`) — no cloud APIs, the photo never leaves your machine. Phone photos are EXIF-rotation corrected and oversized frames are downscaled before scanning.
+- The camera requires `localhost` or HTTPS — browsers block it on plain-IP hosts.
+- Limitations: tuned for frontal faces in reasonable light; it is a human-presence check, not liveness detection — any photo containing a face passes.
 
 ## Retrain
 
