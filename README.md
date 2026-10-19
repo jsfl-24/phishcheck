@@ -52,12 +52,6 @@ PhishCheck opens with an **"Are you a human?" popup** — a small modal window, 
 - **Reset human check** (footer) — locks the app and asks again.
 - The check passes once per browser session; a new tab or browser start always asks again.
 
-**Good to know**
-
-- Detection is fully offline (`opencv-python-headless`, code in `src/ml/face_check.py`) — no cloud APIs, the photo never leaves your machine. Phone photos are EXIF-rotation corrected and oversized frames are downscaled before scanning.
-- The camera requires `localhost` or HTTPS — browsers block it on plain-IP hosts.
-- Limitations: tuned for frontal faces in reasonable light; it is a human-presence check, not liveness detection — any photo containing a face passes.
-
 ## Retrain
 
 ```bash
